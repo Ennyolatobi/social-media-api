@@ -7,7 +7,10 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if self.action in ['update', 'partial_update', 'destroy']:
+            return Post.objects.filter(user=self.request.user)
         return Post.objects.all().order_by('-created_at')
+
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

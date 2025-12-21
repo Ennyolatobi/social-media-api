@@ -1,36 +1,24 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework import generics, permissions
 from django.contrib.auth.models import User
-from .models import Follow
-from posts.models import Post
-from posts.serializers import PostSerializer
+from rest_framework import serializers
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def follow_user(request, id):
-    try:
-        user_to_follow = User.objects.get(id=id)
-    except User.DoesNotExist:
-        return Response({"error": "User not found"}, status=404)
+# Serializer for registration
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
-    if user_to_follow == request.user:
-        return Response({"error": "You cannot follow yourself"}, status=400)
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        return user
 
-    Follow.objects.get_or_create(
-        follower=request.user,
-        following=user_to_follow
-    )
-    return Response({"message": "User followed successfully"})
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def feed(request):
-    following_ids = Follow.objects.filter(
-        follower=request.user
-    ).values_list('following', flat=True)
-
-    posts = Post.objects.filter(user__id__in=following_ids).order_by('-created_at')
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
+# View for registration
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = RegisterSerializer
