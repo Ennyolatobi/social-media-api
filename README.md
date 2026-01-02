@@ -1,35 +1,58 @@
-# Social Media API (Django REST Framework)
+# Social Media API
 
 ## 📌 Project Overview
-This project is a **Social Media API** built using **Django** and **Django REST Framework (DRF)** as part of a Backend Engineering Capstone Project.
+Social Media API is a backend RESTful service built with Django and Django REST Framework.  
+It provides core social media features such as user management, posts, following, personalized feeds, and likes.
 
-The API simulates core social media functionalities such as:
-- User management
-- Post creation and management
-- User follow system
-- Viewing a personalized feed
-
-The goal of this project is to demonstrate backend development skills including API design, database modeling, authentication, and RESTful principles.
+This project focuses on backend functionality and API design. There is no frontend interface.
 
 ---
 
 ## 🚀 Features
-- User registration and authentication (JWT-based)
-- Create, read, update, and delete posts
+
+### Functional Requirements
+- User authentication
+- Create posts
 - Follow and unfollow users
-- View a feed of posts from followed users
-- Secure endpoints with authentication
-- CORS enabled for frontend integration
+- Personalized feed (posts from followed users)
+- Like posts
+
+### Technical Requirements
+- Django & Django REST Framework
+- SQLite database
+- Session-based authentication
+- RESTful API endpoints
+
+### Stretch Features
+- Post likes
+- Media field support
+- Profile customization fields
 
 ---
 
-## 🛠️ Tech Stack
-- **Backend Framework:** Django
-- **API Framework:** Django REST Framework
-- **Authentication:** JWT (Simple JWT)
-- **Database:** SQLite (development)
-- **Frontend (optional):** HTML, CSS, JavaScript
-- **Version Control:** Git & GitHub
+## 🧩 API Endpoints
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| GET | `/api/users/all/` | List all users |
+| POST | `/api/users/follow/<id>/` | Follow a user |
+| POST | `/api/users/unfollow/<id>/` | Unfollow a user |
+| POST | `/api/posts/` | Create a post |
+| GET | `/api/feed/` | View personalized feed |
+| POST | `/api/like/<post_id>/` | Like a post |
+
+---
+
+## 🧪 Testing the API
+
+The API can be tested using `curl` or any API client.
+
+### Example: Create a post
+```bash
+curl -X POST http://127.0.0.1:8000/api/posts/ \
+  -u username:password \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Hello world"}'
 
 ---
 
@@ -48,12 +71,6 @@ social-media-api/
 ├── venv/
 ├── .gitignore
 └── README.md
-
-📌 Project Status
-
-🚧 In Progress
-Core backend setup completed.
-Next steps include implementing full CRUD functionality, follow system logic, and frontend integration.
 
 ✍️ Author
 
